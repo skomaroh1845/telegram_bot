@@ -1,22 +1,16 @@
 import asyncio
 
+from aiogram import Bot, Dispatcher, executor
+from config import BOT_TOKEN
 
 
+loop = asyncio.get_event_loop()
+bot = Bot(BOT_TOKEN, parse_mode="MarkdownV2")
+dp = Dispatcher(bot, loop=loop)
 
-
-
-
-import requests
-
-API_link = "https://api.telegram.org/bot"
-
-updates = requests.get(API_link + "/getUpdates?offset=-1").json()
-
-message = updates['result'][0]['message']
-
-chat_id = message['from']['id']
-text = message['text']
-
-sent_message = requests.get(API_link + f"/sendMessage?chat_id={chat_id}&text=Hi, you have written: {text}")
-
+if __name__ == "__main__":
+    from handlers import dp, send_to_admin, shutdowning
+    executor.start_polling(dp,
+                           on_startup=send_to_admin,
+                           on_shutdown=shutdowning)
 
