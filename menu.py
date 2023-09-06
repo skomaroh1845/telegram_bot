@@ -6,7 +6,12 @@ menu = ReplyKeyboardMarkup(
             KeyboardButton(text="Start computing")
         ],
         [
-            KeyboardButton(text="Current state")
+            KeyboardButton(text="Curr state"),
+            KeyboardButton(text="Stages")
+        ],
+        [
+            KeyboardButton(text="Load states"),
+            KeyboardButton(text="Paths")
         ],
         [
             KeyboardButton(text="Terminate task")
@@ -22,7 +27,8 @@ common_commands = ReplyKeyboardMarkup(
             KeyboardButton(text="squeue")
         ],
         [
-            KeyboardButton(text="sinfo")
+            KeyboardButton(text="sinfo"),
+            KeyboardButton(text="last file")
         ]
     ],
     resize_keyboard=True
