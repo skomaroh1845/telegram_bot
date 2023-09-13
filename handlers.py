@@ -86,10 +86,23 @@ async def actions(message: Message):
     await message.answer(text=text)
 
 
+@dp.message_handler(Text(startswith="/stage: "))
+async def set_stage(message: Message):
+    computer.curr_stage = int(message.text[8:])
+    for i in computer.stages:
+        if i < computer.curr_stage:
+            computer.stages[i] = True
+        else:
+            computer.stages[i] = False
+    computer.job_num = ''
+    print(f'curr stage changed to {computer.curr_stage}')
+    await message.answer(text=text_replace(f'curr stage changed to {computer.curr_stage}'))
+
 
 @dp.message_handler(Command("menu"))
 async def calc_menu(message: Message):
     await message.answer(text='menu', reply_markup=menu)
+
 
 @dp.message_handler(Text(equals=["Start computing", "Curr state", "Stages", "Terminate task", "Load states", "Paths"]))
 async def actions_calc(message: Message):
@@ -152,23 +165,28 @@ def checking_thread():
 
 async def checking():
     print("in checking")
+    minutes = 0
+    all = 0
     while computer.running:
         await asyncio.sleep(60)
         if not computer.running:
             break
         print('running')
+        minutes += 1
+        all += 1
         computer.check_curr_job_state()
         if computer.output_text == 'FAILED':
             await bot.send_message(chat_id=admin_id, text=text_replace(f'Calculation failed. Stage: {computer.curr_stage}'))
             break
         if computer.stages[computer.curr_stage] is True:
             if computer.curr_stage == 15:
-                await bot.send_message(chat_id=admin_id, text='Calculation completed')
+                await bot.send_message(chat_id=admin_id, text=text_replace(f'Calculation completed. \nOverall duration: {all} minutes.'))
                 break
             computer.curr_stage += 1
             computer.start_stage(computer.curr_stage)
             print("checkup: " + computer.output_text)
-            text = text_replace(computer.output_text)
+            text = text_replace(computer.output_text + f'\nPrevious stage duration: {minutes} minutes.')
+            minutes = 0
             await bot.send_message(chat_id=admin_id, text=text) # '''
     print('thread finished')
     computer.running = False
