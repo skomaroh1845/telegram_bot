@@ -64,7 +64,7 @@ class Computer:
     def start_stage(self, stage_num):
         try:
             os.system(f'ssh {user} ' +
-                      f'"sbatch start_python_16cpu.sh -e {path_to_venv} -f {scripts_paths[stage_num]} -i {self.input_dir} -o {self.output_dir}" ' +
+                    f'"sbatch start_python_16cpu.sh -e {path_to_venv} -f {scripts_paths[stage_num]} -i {self.input_dir} -o {self.output_dir}" ' +
                       '> output.txt')
             self.curr_stage = stage_num
             try:

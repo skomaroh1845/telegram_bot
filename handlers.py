@@ -49,12 +49,14 @@ async def terminal(message: Message):
 @dp.message_handler(Text(startswith="/input: "))
 async def set_input(message: Message):
     computer.input_dir = message.text[8:]
+    computer.save_to_file()
     await message.answer(text=text_replace(f'input dir changed to: {computer.input_dir}'))
 
 
 @dp.message_handler(Text(startswith="/output: "))
 async def set_output(message: Message):
     computer.output_dir = message.text[9:]
+    computer.save_to_file()
     await message.answer(text=text_replace(f'output dir changed to: {computer.output_dir}'))
 
 
@@ -96,6 +98,7 @@ async def set_stage(message: Message):
             computer.stages[i] = False
     computer.job_num = ''
     print(f'curr stage changed to {computer.curr_stage}')
+    computer.save_to_file()
     await message.answer(text=text_replace(f'curr stage changed to {computer.curr_stage}'))
 
 
@@ -175,6 +178,7 @@ async def checking():
         minutes += 1
         all += 1
         computer.check_curr_job_state()
+        computer.save_to_file()
         if computer.output_text == 'FAILED':
             await bot.send_message(chat_id=admin_id, text=text_replace(f'Calculation failed. Stage: {computer.curr_stage}'))
             break
