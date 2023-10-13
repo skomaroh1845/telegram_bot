@@ -1,0 +1,5 @@
+       JobID    JobName  Partition    Account  AllocCPUS      State ExitCode 
+------------ ---------- ---------- ---------- ---------- ---------- -------- 
+840012       retropipe+         RT calccommon          8  COMPLETED      0:0 
+840012.batch      batch            calccommon          8  COMPLETED      0:0 
+840012.exte+     extern            calccommon          8  COMPLETED      0:0 
