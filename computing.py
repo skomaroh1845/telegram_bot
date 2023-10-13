@@ -76,7 +76,7 @@ class Computer:
                 self.in_list.append(f.readline().rstrip('\n\r'))
                 self.out_list.append(f.readline().rstrip('\n\r'))
             print(self.input_dir, self.output_dir)
-            self.output_text = f'last state loaded: curr_step == {self.curr_stage} \n curr_sample == {self.sample_names[self.curr_sample]}'
+            self.output_text = f'last state loaded:\ncurr_step == {self.curr_stage} \ncurr_sample == {self.sample_names[self.curr_sample]}'
 
 
     def save_to_file(self):

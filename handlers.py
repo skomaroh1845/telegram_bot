@@ -33,6 +33,7 @@ async def help(message: Message):
     await message.answer(text=text_replace('input='))
     await message.answer(text=text_replace('output='))
     await message.answer(text=text_replace('stage='))
+    await message.answer(text=text_replace('sample='))
     await message.answer(text=text_replace('set_dir_list\ndir1\ndir2\n...'))
     await message.answer(text=text_replace('/menu'))
     await message.answer(text=text_replace('/common'))
@@ -47,6 +48,12 @@ async def set_dir_list(message: Message):
         computer.set_dir_lists(dirs[1:])
         await message.answer(text=text_replace('dirs list written'))
 
+@dp.message_handler(Text(startswith='samples'))
+async def show_dir_list(message: Message):
+    text = ''
+    for name in computer.sample_names:
+        text = text + name + '\n'
+    await message.answer(text=text_replace(text))
 
 @dp.message_handler(Text(startswith='$'))
 async def terminal(message: Message):
@@ -208,7 +215,7 @@ async def actions_calc(message: Message):
             computer.running = False
 
     if message.text == "Stages":
-        states = ''
+        states = f'Sample {computer.sample_names[computer.curr_sample]}\n'
         for i in computer.stages:
             states = states + str(i) + ': ' + str(computer.stages[i]) + '\n'
         computer.output_text = states
@@ -256,14 +263,15 @@ async def checking():
                             computer.stages[i] = False
                     computer.job_num = ''
                     computer.save_to_file()
-                    minutes = 0
                 else:
                     break
             else:
                 computer.curr_stage += 1
             computer.start_stage(computer.curr_stage)
             print("checkup: " + computer.output_text)
-            text = text_replace(computer.output_text + f'\nPrevious stage duration: {minutes} minutes.')
+            text = text_replace(computer.output_text)
+            if computer.curr_stage > 1:
+                text = text + text_replace(f'\nPrevious stage duration: {minutes} minutes.')
             minutes = 0
             await bot.send_message(chat_id=admin_id, text=text) # '''
     print('thread finished')
